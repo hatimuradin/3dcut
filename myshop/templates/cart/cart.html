@@ -1,0 +1,9 @@
+{% extends "catalog.html" %} 
+{% block content %}      
+<h1>Cart Page Here</h1>      
+    {% if basket_items.count == 0 %}
+        there is no items in your basket
+    {% else %}
+        items to be shown later 
+    {% endif %}
+{% endblock %} 

@@ -1,0 +1,4 @@
+<h3>دسته بندی ها</h3> 
+{% for c in active_categories %}      
+<a href="{{ c.get_absolute_url }}"></a>{{ c.name }}</a><br /> 
+{% endfor %}

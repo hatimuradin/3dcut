@@ -1,0 +1,15 @@
+<form method="post" action="." class="cart" 
+    oninput="price.value=Math.floor(Math.PI*Math.pow(parseInt(radius.value), 2)*parseInt(bar_length.value))+1000"> 
+    {% csrf_token %}
+    {{ form.as_p }} <br />
+    <select id="metals">
+        {% for type in metal_types %}
+            <option value="{{ type.name }}">{{ type.name }}</option>
+        {% endfor %}
+    </select>
+    <label></label>
+    <input type="range" id="radius" value="0">
+    <input type="range" id="bar_length" value="0">
+    <output id="price" for="bar_length radius"></output>
+    <input type="submit" value="Add To Cart" name="submit" alt="Add To Cart" />
+</form>
