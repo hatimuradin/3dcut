@@ -1,0 +1,4 @@
+**/.DS_Store
+shop/
+db.sqlite3
+manage.py
