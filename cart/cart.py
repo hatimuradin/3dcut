@@ -4,52 +4,23 @@ from django.shortcuts import get_object_or_404
 from django.http import HttpResponseRedirect
 import decimal   # not needed yet but we will later 
 import random 
+import json
 
-CART_ID_SESSION_KEY = 'cart_id' # get the current user's cart id, sets new one if blank 
-def _cart_id(request):      
-    if request.session.get(CART_ID_SESSION_KEY,'') == '':            
-        request.session[CART_ID_SESSION_KEY] = _generate_cart_id()      
-    return request.session[CART_ID_SESSION_KEY] 
-    
-def _generate_cart_id():              
-    cart_id = ''      
-    characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz1234567890!@#$%^&*()'      
-    cart_id_length = 50      
-    for y in range(cart_id_length):           
-        cart_id += characters[random.randint(0, len(characters)-1)]      
-    return cart_id 
-    
-# return all items from the current user's cart 
-def get_cart_items(request):      
-    return Item.objects.filter(cart_id=_cart_id(request)) 
-    
+def gen_order_id():
+    all_chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ1234567890'
+    order_id = random.choices(all_chars, k=10)
+    return ''.join(order_id)
+   
 # add an item to the cart 
-def add_to_cart(request): 
-    print('inside add to cart method')     
-    postdata = request.POST.copy()      
-    # get product slug from post data, return blank if empty      
-    product_slug = postdata.get('product_slug','')      
-    # get quantity added, return 1 if empty      
-    quantity = postdata.get('quantity',1)      
+def add_to_cart(request, cleaned_data):
+    print('inside add to cart method')
+    # changing cleaned_data metal types to string for serilization
+    cleaned_data['metal_types'] = cleaned_data['metal_types'].name    
     # fetch the product or return a missing page error      
-    p = get_object_or_404(Product, slug=product_slug)      
-    #get products in cart      
-    cart_products = get_cart_items(request)      
-    product_in_cart = False      
-    # check to see if item is already in cart      
-    for cart_item in cart_products:           
-        if cart_item.product.id == p.id:                
-            # update the quantity if found                
-            cart_item.augment_quantity(quantity)                
-            product_in_cart = True      
-    if not product_in_cart:           
-        # create and save a new cart item           
-        ci = Item()           
-        i.product = p           
-        ci.quantity = quantity           
-        ci.cart_id = _cart_id(request)           
-        ci.save() 
-        
-# returns the total number of items in the user's cart 
-def cart_distinct_item_count(request):      
-    return get_cart_items(request).count() 
+    p = get_object_or_404(Product, slug=cleaned_data.get('product_slug'))
+    if 'cart' not in request.session:
+        request.session['cart'] = {}
+    request.session['cart'][gen_order_id()] = cleaned_data
+    print(request.session['cart'])       
+ 
+

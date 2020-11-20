@@ -1,4 +1,18 @@
-{% extends "catalog.html" %} 
-{% block content %} 
-<h1>به فروشگاه فروش قطعات خوش آمدید.</h1> 
+{% extends "catalog.html" %}
+{% block content %}
+{% load static %}
+<h2>محصولات فروشگاه ما: </h2>
+<div class="uk-child-width-1-2@m" uk-grid>
+    {% for item in products %}
+    <div class="uk-card uk-card-default">
+        <div class="uk-card-media-top">
+            <img src="{% static "images/products/main/" %}{{ item.image }}" alt="{{ p.name }}" uk-image /><br />
+        </div>
+        <div class="uk-card-body">
+            <h3 class="uk-card-title"><a href="product/{{ item.slug }}">{{ item.name }}</a></h3>
+            <p>{{ item.description }}</p>
+        </div>
+    </div>
+    {% endfor %}
+</div>
 {% endblock %}

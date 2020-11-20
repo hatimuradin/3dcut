@@ -3,10 +3,8 @@ from django.contrib import admin
 # Register your models here.
 from django.contrib import admin 
 from catalog.models import Product, Category, Metal
-from catalog.forms import ProductAdminForm 
 
 class ProductAdmin(admin.ModelAdmin):      
-    form = ProductAdminForm      
     # sets values for how the admin site lists your products       
     list_display = ('name', 'created_at', 'updated_at',)      
     list_display_links = ('name',)      

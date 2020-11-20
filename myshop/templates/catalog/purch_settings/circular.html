@@ -1,15 +1,30 @@
-<form method="post" action="." class="cart" 
-    oninput="price.value=Math.floor(Math.PI*Math.pow(parseInt(radius.value), 2)*parseInt(bar_length.value))+1000"> 
+<!-- <form action="" method="post"
+    oninput="price.value=Math.floor(Math.PI*Math.pow(parseInt(radius.value), 2)*parseInt(bar_length.value))+1000">
     {% csrf_token %}
-    {{ form.as_p }} <br />
+    <label>جنس فلز: </label>
+    <input type="text">
     <select id="metals">
         {% for type in metal_types %}
-            <option value="{{ type.name }}">{{ type.name }}</option>
+        <option value="{{ type.name }}">{{ type.name }}</option>
         {% endfor %}
     </select>
-    <label></label>
-    <input type="range" id="radius" value="0">
-    <input type="range" id="bar_length" value="0">
-    <output id="price" for="bar_length radius"></output>
-    <input type="submit" value="Add To Cart" name="submit" alt="Add To Cart" />
-</form>
+    <label>شعاع سطح مقطع: </label>
+    <input type="range" id="radius" value="0"><br />
+    <label>طول میله (بر حسب میلی متر):‌</label>
+    <input type="range" id="bar_length" value="0"><br />
+    <label>قیمت محصول اتخابی شما: </label>
+    <output id="price" for="bar_length radius">0</output>ریال<br />
+    <input class="uk-button uk-button-primary" type="submit" value="افزودن به سبد">
+</form> 
+
+<form action = "" method = "post">
+{% csrf_token %}
+<p><label for="id_quantity">Quantity:</label> <input type="text" name="quantity" size="2" value="1" class="quantity"
+        maxlength="5" required id="id_quantity"></p>
+<p><label for="id_metals">Metals:</label> <input type="text" name="metals" required id="id_metals"></p>
+<label>شعاع سطح مقطع: </label>
+    <input type="number" required id="id_radius" name="radius"><br />
+    <p><label for="id_bar_length">Bar length:</label> <input type="number" name="bar_length" required
+        id="id_bar_length"><input type="hidden" name="product_slug" value="circular" id="id_product_slug"></p>
+<input type="submit" value="Submit">
+</form>-->

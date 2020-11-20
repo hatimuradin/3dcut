@@ -13,6 +13,7 @@ from django.template.loader import render_to_string
 
 from .forms import SignUpForm, SignInForm
 from .tokens import account_activation_token
+from utils.after_login import do_after_login_tasks
 
 def signin_view(request):
     if request.method == 'POST':
@@ -21,8 +22,10 @@ def signin_view(request):
         user = authenticate(request, username=username, password=password)
         if user is not None:
             login(request, user)
+            # Do post login tasks
+            do_after_login_tasks(request, user)
             # Redirect to a success page.
-            return redirect('/')
+            return redirect(request.GET.get('next', 'home'))
         else:
             form = SignInForm(request.POST)
             # Return an 'invalid login' error message.

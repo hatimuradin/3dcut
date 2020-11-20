@@ -14,11 +14,8 @@ class Item(models.Model):
     quantity = models.IntegerField(default=1)      
     product = models.ForeignKey('catalog.Product', on_delete=models.CASCADE) 
     metal_type = models.ForeignKey('catalog.Metal', on_delete=models.CASCADE)
-    shape_length = models.IntegerField()
-    shape_x = 0
 
-    class Meta:           
-        db_table = 'cart_items'           
+    class Meta:                      
         ordering = ['date_added']      
         
     def total(self):           
@@ -26,9 +23,6 @@ class Item(models.Model):
         
     def name(self):           
         return self.product.name      
-        
-    def price(self):           
-        return self.product.price 
 
     def get_absolute_url(self):           
         return self.product.get_absolute_url()      
@@ -36,3 +30,10 @@ class Item(models.Model):
     def augment_quantity(self, quantity):           
         self.quantity = self.quantity + int(quantity)           
         self.save()
+
+class CircularItem(Item):
+    bar_length = models.IntegerField()
+    radius = models.IntegerField()
+
+class RectangularItem(Item):
+    pass

@@ -31,8 +31,6 @@ class Product(models.Model):
     is_active = models.BooleanField(default=True)      
     is_bestseller = models.BooleanField(default=False)      
     is_featured = models.BooleanField(default=False)      
-    quantity = models.IntegerField()
-    cross_section = models.IntegerField()
     description = models.TextField()      
     meta_keywords = models.CharField(max_length=255, help_text='Comma-delimited set of SEO keywords for meta tag')      
     meta_description = models.CharField(max_length=255, help_text='Content for description meta tag')
@@ -59,3 +57,6 @@ class Product(models.Model):
 class Metal(models.Model):
     name = models.CharField(max_length=255, unique=True, default='aluminum6610')
     unit_price = models.IntegerField()
+    
+    def __str__(self):
+        return self.name
