@@ -1,0 +1,45 @@
+{% extends "catalog.html" %}
+{% block externals %}
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.7.1/dist/leaflet.css"
+    integrity="sha512-xodZBNTC5n17Xt2atTPuE1HxjVMSvLVW9ocqUKLsCC5CXdbqCmblAshOMAS6/keqq/sMZMZ19scR4PsZChSR7A=="
+    crossorigin="" />
+<script src="https://unpkg.com/leaflet@1.7.1/dist/leaflet.js"
+    integrity="sha512-XQoYMqMTK8LvdxXYG3nZ448hOEQiglfqkJs1NOQV44cWnUrBc8PkAOcXy20w0vlaXaVUearIOBhiXZ5V3ynxwA=="
+    crossorigin=""></script>
+{{ block.super }}
+
+{% endblock %}
+{% block content %}
+
+<div class="uk-section-default">
+    <form method="post">
+        {% csrf_token %}
+        <div id="mapdiv" style="width:250px; height:250px"></div>
+        {{ form.as_p }}
+        <input type="submit" value="صدور فاکتور و پرداخت" class="uk-button uk-button-danger">
+    </form>
+</div>
+
+<script>
+    // Creating map options
+    var mapOptions = {
+        center: [35.7025, 51.3916],
+        zoom: 10,
+        zoomControl: false
+    }
+    // Creating a map object
+    var mymap = new L.map('mapdiv', mapOptions);
+    // Creating a Layer object
+    var layer = new L.TileLayer('http://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png');
+    // Adding layer to the map
+    mymap.addLayer(layer);
+    // Creating a Marker
+    var marker = L.marker([35.7025, 51.3916]).addTo(mymap);
+    function onMapClick(e) {
+        marker.setLatLng(e.latlng)
+        document.getElementById('id_lat').value = 
+        document.getElementById('id_lon').value = Number((e.latlng.lng).toFixed(6));
+    }
+    mymap.on('click', onMapClick);
+</script>
+{% endblock %}

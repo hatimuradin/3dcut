@@ -1,0 +1,19 @@
+{% extends "auth/auth_base.html" %}
+{% block auth_content %}
+    <h2>ورود</h2>
+    <form method="post">
+      {% csrf_token %}
+      {% for field in form %}
+      {{ field }}
+      {% for error in field.errors %}
+      <p style="color: red">{{ error }}</p>
+      {% endfor %}
+      </p>
+      {% endfor %}
+      <input type="submit" class="uk-button" value="ورود" /><br />
+      <div class="uk-grid-small  uk-padding-large" uk-grid>
+        <div class="uk-width-1-2 uk-text-small "><small><a href="/auth/signup">ثبت نام</a></small></div>
+        <div class="uk-width-1-2 uk-text-small "><small><a href="/auth/passforget">فراموشی رمز عبور</a></small></div>
+      </div>
+    </form>
+{% endblock %}
