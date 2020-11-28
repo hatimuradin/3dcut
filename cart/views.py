@@ -1,12 +1,11 @@
-from django.shortcuts import render, HttpResponse, redirect
+from django.shortcuts import render, HttpResponse, redirect, reverse
 from myshop.models import Customer
 from cart.models import Basket, Item
 from django.utils.translation import ugettext as _
-
-# Create your views here.
 from django.shortcuts import render
 from django.template import RequestContext 
-from cart import cart 
+from cart import cart
+from django.db.models import Sum
  
 def show_cart(request, template_name="cart/cart.html"):
     item_types = ['circularitem', 'rectangularitem']
@@ -18,6 +17,7 @@ def show_cart(request, template_name="cart/cart.html"):
         if customer_basket is not None:
             # Since some items have child tables in database we fetch childs data first
             joined_q = customer_basket.item_set.select_related(*item_types)
+            total_price = 0
             for item in joined_q:
                 for t in item_types:
                     try:
@@ -27,22 +27,25 @@ def show_cart(request, template_name="cart/cart.html"):
                         for k in entries_to_remove:
                             item_specifies.pop(k, None)
                         cart[id] = item_specifies
+                        total_price += item.price
                     except:
                         print('exception during item add to cart to show to authenticated user')
     else:
         session_cart = request.session.get('cart')
+        total_price = 0
         if session_cart != None:
             for item in session_cart:
                 cart[item] = session_cart[item]
+                total_price += item.price
     # get cookie's basket
-    return render(request, template_name, {'cart': cart})
+    return render(request, template_name, {'cart': cart, 'total_price': total_price})
     
 def remove_item_from_cart(request, item_id, template_name='cart/cart.html'):
     
     if request.user.is_authenticated:
         try:
             Item.objects.filter(id=item_id).delete()
-            return redirect('cart:show_cart')
+            return redirect(reverse('cart:show_cart'))
         except:
             print('exception during delete in basket when user authenticated')
         # delete item from permanent database

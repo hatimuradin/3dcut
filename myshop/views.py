@@ -1,21 +1,21 @@
-from django.shortcuts import render, redirect
+from django.shortcuts import render, redirect, reverse
 from django.contrib.auth import authenticate, login, logout
+from django.contrib.auth.forms import PasswordResetForm, PasswordChangeForm
+from django.contrib.auth.decorators import login_required
+from django.contrib.auth.models import User
 from django.conf import settings
 from django.contrib.sites.shortcuts import get_current_site
 from django.utils.encoding import force_text
-from django.contrib.auth.models import User
 from django.db import IntegrityError
-from django.utils.http import urlsafe_base64_decode
+from django.utils.http import urlsafe_base64_decode, urlsafe_base64_encode
 from django.utils.encoding import force_bytes
-from django.utils.http import urlsafe_base64_encode
 from .tokens import account_activation_token
 from django.template.loader import render_to_string
-
-from .forms import SignUpForm, SignInForm
-from .tokens import account_activation_token
+from myshop.forms import SignUpForm, SignInForm
 from utils.after_login import do_after_login_tasks
 
 def signin_view(request):
+    errors = []
     if request.method == 'POST':
         username = request.POST['username']
         password = request.POST['password']
@@ -28,17 +28,19 @@ def signin_view(request):
             return redirect(request.GET.get('next', 'home'))
         else:
             form = SignInForm(request.POST)
+            errors.append('User not found')
+            return render(request, 'auth/signin.html', {'form': form, 'errors': errors})
             # Return an 'invalid login' error message.
     else:
         form = SignInForm() 
-    return render(request, 'signin.html', {'form': form})
+    return render(request, 'auth/signin.html', {'form': form})
 
 def logout_view(request):
     logout(request)
     return redirect('/')
 
 def activation_sent_view(request):
-    return render(request, 'activation/activation_sent.html')
+    return render(request, 'auth/activation_sent.html')
 
 def activate(request, uidb64, token):
     try:
@@ -51,8 +53,9 @@ def activate(request, uidb64, token):
         # if valid set active true 
         user.is_active = True
         # set signup_confirmation true
-        user.customer.signup_confirmation = True
-        user.save()
+        if user.customer.signup_confirmation == False:
+            user.customer.signup_confirmation = True
+            user.save()
         login(request, user)
         return redirect('/')
     else:
@@ -74,7 +77,7 @@ def signup_view(request):
             subject = 'Please Activate Your Account'
             # load a template like get_template() 
             # and calls its render() method immediately.
-            message = render_to_string('activation/activation_request.html', {
+            message = render_to_string('auth/activation_request.html', {
                 'user': user,
                 'domain': current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)),
@@ -82,11 +85,25 @@ def signup_view(request):
                 'token': account_activation_token.make_token(user),
             })
             user.email_user(subject, message)
-            return redirect('activation_sent')
+            return redirect(reverse('auth:activation_sent'))
     else:
         form = SignUpForm()
-    return render(request, 'signup.html', {'form': form})
+    return render(request, 'auth/signup.html', {'form': form})
 
+def password_forget_view(request):
+    if request.method == 'POST':
+        pass
+    else:
+        form = PasswordResetForm()
+        return render(request, "auth/password_forget.html", {'form': form})
+
+@login_required
+def password_reset_view(request):
+    if request.method == 'POST':
+        pass
+    else:
+        form = PasswordChangeForm(request.user)
+        return render(request, "auth/password_reset.html", {'form': form})
 
 def home_view(request):
     return render(request, 'index.html')

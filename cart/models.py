@@ -7,6 +7,7 @@ from myshop.models import Customer
 class Basket(models.Model):
     customer = models.ForeignKey(Customer, on_delete=models.CASCADE)
     active = models.BooleanField(default=True)
+    total_price = models.BigIntegerField(default=0)
 
 class Item(models.Model):      
     basket = models.ForeignKey(Basket, on_delete=models.CASCADE)      
@@ -14,7 +15,7 @@ class Item(models.Model):
     quantity = models.IntegerField(default=1)      
     product = models.ForeignKey('catalog.Product', on_delete=models.CASCADE) 
     metal_type = models.ForeignKey('catalog.Metal', on_delete=models.CASCADE)
-
+    price = models.IntegerField(default=0)
     class Meta:                      
         ordering = ['date_added']      
         

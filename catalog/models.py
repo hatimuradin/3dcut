@@ -57,6 +57,8 @@ class Product(models.Model):
 class Metal(models.Model):
     name = models.CharField(max_length=255, unique=True, default='aluminum6610')
     unit_price = models.IntegerField()
+    min_length = models.IntegerField()
+    max_length = models.IntegerField()
     
     def __str__(self):
         return self.name

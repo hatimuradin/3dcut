@@ -8,7 +8,7 @@ msgid ""
 msgstr ""
 "Project-Id-Version: PACKAGE VERSION\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2020-11-16 17:24+0000\n"
+"POT-Creation-Date: 2020-11-24 12:59+0000\n"
 "PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
 "Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
 "Language-Team: LANGUAGE <LL@li.org>\n"
@@ -18,18 +18,22 @@ msgstr ""
 "Content-Transfer-Encoding: 8bit\n"
 "Plural-Forms: nplurals=2; plural=(n > 1);\n"
 
-#: cart/views.py:13
-msgid "Hello"
-msgstr "سلام"
+#: shipping/forms.py:6
+#, fuzzy
+msgid "address"
+msgstr "آدرس"
+
+#~ msgid "Hello"
+#~ msgstr "سلام"
 
 msgid "quantity"
 msgstr "تعداد"
 
-msgid "metal_types"
-msgstr "نوع فلز"
+#~ msgid "metal_types"
+#~ msgstr "نوع فلز"
 
-msgid "radius"
-msgstr "شعاع سطح مقطع"
+#~ msgid "radius"
+#~ msgstr "شعاع سطح مقطع"
 
-msgid "bar_length"
-msgstr "طول میله"
+#~ msgid "bar_length"
+#~ msgstr "طول میله"

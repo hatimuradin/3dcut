@@ -2,6 +2,7 @@ from django.shortcuts import get_object_or_404, render, redirect, HttpResponse
 from catalog.models import Category, Product, Metal
 from django.urls import reverse
 from cart import cart
+from utils import custom_types
 from cart.models import CircularItem, RectangularItem, Basket
 from myshop.models import Customer
 from catalog.forms import CircularProductAddToCartForm, RectangularProductAddToCartForm
@@ -31,14 +32,6 @@ def show_category(request, category_slug, template_name="catalog/category.html")
 
 def show_product(request, product_slug, template_name="catalog/product.html"):
     p = get_object_or_404(Product, slug=product_slug)
-    form_types = {
-        'circular': CircularProductAddToCartForm, 
-        'rectangular': RectangularProductAddToCartForm
-    }
-    item_model_types = {
-        'circular': CircularItem,
-        'rectangular': RectangularItem
-    }
     context = {
         'product_image': p.image,
         'slug': p.slug,
@@ -49,7 +42,7 @@ def show_product(request, product_slug, template_name="catalog/product.html"):
     if request.method == 'POST':
         # add to cart...create the bound form
         postdata = request.POST.copy()
-        form = form_types[product_slug](postdata)
+        form = custom_types.item_form_types[product_slug](postdata)
         # check if posted data is valid
         if form.is_valid():
             # add to cart and redirect to cart page
@@ -63,6 +56,7 @@ def show_product(request, product_slug, template_name="catalog/product.html"):
                 item = form.save(commit=False)
                 item.product = p
                 item.basket = customer_basket
+                item.price = cart.compute_item_price(postdata)
                 item.save()
                 response = redirect(reverse('cart:show_cart'))
             else:
@@ -73,11 +67,11 @@ def show_product(request, product_slug, template_name="catalog/product.html"):
             # do form invalid actions
             print(form.errors)
             print(form.non_field_errors)
-            context['form'] = form_types[product_slug]()
+            context['form'] = custom_types.item_form_types[product_slug]()
             return render(request, template_name, context=context)
     else:   
         # it’s a GET, create the unbound form. Note request as a kwarg           
-        form = form_types[product_slug]()   
+        form = custom_types.item_form_types[product_slug]()   
         # assign the hidden input the product slug      
         form.fields['product_slug'].widget.attrs['value'] = product_slug    
         # set the test cookie on our first GET request      

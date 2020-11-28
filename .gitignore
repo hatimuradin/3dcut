@@ -1,5 +1,8 @@
 **/.DS_Store
+**/__pycache__
+zarinpal/
 shop/
 db.sqlite3
 manage.py
+shop.sock
 .vscode/

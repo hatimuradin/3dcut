@@ -1,6 +1,6 @@
-from django.shortcuts import render, HttpResponse
+from django.shortcuts import render
 
 # Create your views here.
 
 def show_payment(request):
-    return HttpResponse('hi payment')
+    return render(request, "payment/payment.html")

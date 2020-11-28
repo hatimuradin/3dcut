@@ -11,8 +11,8 @@ class SignUpForm(UserCreationForm):
     email = forms.EmailField(max_length=150, widget=forms.TextInput(
         attrs={'placeholder': 'ایمیل'}))
     username = forms.CharField(max_length=100, widget=forms.TextInput(attrs={'placeholder': 'نام کاربری'}))
-    password1 = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'کلمه عبور'}))
-    password2 = forms.CharField(widget=forms.TextInput(attrs={'placeholder': 'تکرار کلمه عبور'}))
+    password1 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'کلمه عبور'}))
+    password2 = forms.CharField(widget=forms.PasswordInput(attrs={'placeholder': 'تکرار کلمه عبور'}))
 
     class Meta:
         model = User

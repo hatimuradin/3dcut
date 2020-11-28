@@ -15,7 +15,7 @@ class ProductAddToCartForm(forms.ModelForm):
     class Meta:
         model = Item
         fields = ['quantity', 'metal_type']
-        
+
 """     # override the default __init__ so we can set the request
     def __init__(self, request=None, *args, **kwargs):
         self.request = request
@@ -31,9 +31,9 @@ class ProductAddToCartForm(forms.ModelForm):
 
 class CircularProductAddToCartForm(ProductAddToCartForm):
     radius = forms.IntegerField(
-        required=True, label='شعاع سطح مقطع', widget=forms.NumberInput(attrs={'type': 'range'}))
+        required=True, label='شعاع سطح مقطع')
     bar_length = forms.IntegerField(
-        required=True, label='طول میله', widget=forms.NumberInput(attrs={'type': 'range'}))
+        required=True, label='طول میله')
 
     class Meta:
         model = CircularItem
